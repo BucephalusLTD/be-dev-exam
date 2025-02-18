@@ -1,0 +1,113 @@
+openapi: 3.0.0
+info:
+  title: UK Environment Agency Flood Monitoring API
+  description: API for accessing rainfall station data from the UK Environment Agency
+  version: 1.0.0
+  contact:
+    name: Environment Agency
+    url: http://environment.data.gov.uk/flood-monitoring/doc/reference
+
+servers:
+  - url: http://environment.data.gov.uk/flood-monitoring
+    description: Production server
+
+paths:
+  /id/stations:
+    get:
+      summary: Get rainfall stations
+      description: Returns a list of rainfall monitoring stations
+      parameters:
+        - name: parameter
+          in: query
+          description: Filter stations by parameter type
+          required: false
+          schema:
+            type: string
+            enum: [rainfall]
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StationsResponse'
+
+components:
+  schemas:
+    StationsResponse:
+      type: object
+      properties:
+        '@context':
+          type: string
+        meta:
+          type: object
+          properties:
+            publisher:
+              type: string
+            licence:
+              type: string
+            documentation:
+              type: string
+            version:
+              type: string
+            comment:
+              type: string
+            hasFormat:
+              type: array
+              items:
+                type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Station'
+
+    Station:
+      type: object
+      properties:
+        '@id':
+          type: string
+        easting:
+          type: number
+        northing:
+          type: number
+        label:
+          type: string
+        lat:
+          type: number
+        long:
+          type: number
+        measures:
+          type: array
+          items:
+            $ref: '#/components/schemas/Measure'
+        notation:
+          type: string
+        stationReference:
+          type: string
+        gridReference:
+          type: string
+        town:
+          type: string
+        riverName:
+          type: string
+        catchmentName:
+          type: string
+        dateOpened:
+          type: string
+          format: date
+
+    Measure:
+      type: object
+      properties:
+        '@id':
+          type: string
+        parameter:
+          type: string
+        parameterName:
+          type: string
+        period:
+          type: integer
+        qualifier:
+          type: string
+        unitName:
+          type: string
